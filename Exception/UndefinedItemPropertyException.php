@@ -3,7 +3,7 @@
  * (c) itmedia.by <info@itmedia.by>
  */
 
-namespace Itmedia\ArrayTransformer\Exception;
+namespace Itmedia\DataTransformer\Exception;
 
 
 class UndefinedItemPropertyException extends \InvalidArgumentException

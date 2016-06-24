@@ -3,7 +3,7 @@
  * (c) itmedia.by <info@itmedia.by>
  */
 
-namespace Itmedia\ArrayTransformer\Transformer;
+namespace Itmedia\DataTransformer\Transformer;
 
 
 abstract class AbstractTransformer implements TransformerInterface

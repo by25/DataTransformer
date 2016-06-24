@@ -3,10 +3,10 @@
  * (c) itmedia.by <info@itmedia.by>
  */
 
-namespace Itmedia\ArrayTransformer\Provider;
+namespace Itmedia\DataTransformer\Provider;
 
 
-use Itmedia\ArrayTransformer\Transformer\TransformerInterface;
+use Itmedia\DataTransformer\Transformer\TransformerInterface;
 
 interface TransformProviderInterface
 {

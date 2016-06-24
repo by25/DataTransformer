@@ -3,10 +3,10 @@
  * (c) itmedia.by <info@itmedia.by>
  */
 
-namespace Itmedia\ArrayTransformer\Tests\Stub\Transformer;
+namespace Itmedia\DataTransformer\Tests\Stub\Transformer;
 
 
-use Itmedia\ArrayTransformer\Transformer\AbstractTransformer;
+use Itmedia\DataTransformer\Transformer\AbstractTransformer;
 
 class ObjectMethodsUserTransformer extends AbstractTransformer
 {

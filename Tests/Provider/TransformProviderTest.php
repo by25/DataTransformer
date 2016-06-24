@@ -3,13 +3,13 @@
  * (c) itmedia.by <info@itmedia.by>
  */
 
-namespace Itmedia\ArrayTransformer\Tests\Provider;
+namespace Itmedia\DataTransformer\Tests\Provider;
 
 
-use Itmedia\ArrayTransformer\Provider\TransformProvider;
-use Itmedia\ArrayTransformer\Tests\Stub\Transformer\ArrayGroupTransformer;
-use Itmedia\ArrayTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
-use Itmedia\ArrayTransformer\Tests\Stub\Transformer\ObjectMethodsUserTransformer;
+use Itmedia\DataTransformer\Provider\TransformProvider;
+use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayGroupTransformer;
+use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
+use Itmedia\DataTransformer\Tests\Stub\Transformer\ObjectMethodsUserTransformer;
 use PHPUnit\Framework\TestCase;
 
 class TransformProviderTest extends TestCase

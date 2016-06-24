@@ -3,11 +3,11 @@
  * (c) itmedia.by <info@itmedia.by>
  */
 
-namespace Itmedia\ArrayTransformer\Provider;
+namespace Itmedia\DataTransformer\Provider;
 
 
-use Itmedia\ArrayTransformer\Exception\UndefinedItemPropertyException;
-use Itmedia\ArrayTransformer\Transformer\TransformerInterface;
+use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
+use Itmedia\DataTransformer\Transformer\TransformerInterface;
 
 class TransformProvider implements TransformProviderInterface
 {
