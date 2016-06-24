@@ -43,6 +43,11 @@ class TransformProvider implements TransformProviderInterface
      * @return array
      *
      * @throws UndefinedItemPropertyException
+     *
+     * @todo подумать как трансформитровать коллекции, пока такие варианты:
+     *  - в bindingMap указывать атрибут поля вида  'property' => 'arr_field[]'
+     *  - пытаться трансфармацию item даелать, если ошибка - вторая попытка трансформации как collection
+     *  - передавать в конструктор трансформера атрибут, являются данные коллекцией или нет
      */
     public function transform($item, TransformerInterface $transformer)
     {
