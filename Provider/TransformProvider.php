@@ -48,20 +48,14 @@ class TransformProvider implements TransformProviderInterface
     {
         $data = $transformer->transform($item);
 
+        $parts = [];
+
         foreach ($transformer->getTransformers() as $property => $includedTransformer) {
-
             $partItem = $this->fetchProperty($property, $item);
-            $partData = $includedTransformer->transform($partItem);
-
-            $key = $includedTransformer->getIncludeKey();
-            if ($key) {
-                $data[$key] = $partData;
-            } else {
-                $data = array_merge($data, $partData);
-            }
+            $parts[$property] = $this->transform($partItem, $includedTransformer);
         }
 
-        return $data;
+        return $this->bindData($transformer, $data, $parts);
     }
 
 
@@ -76,7 +70,7 @@ class TransformProvider implements TransformProviderInterface
      */
     private function fetchProperty($property, $item)
     {
-        if (is_array($item) && in_array($property, $item, true)) {
+        if (is_array($item) && array_key_exists($property, $item)) {
             return $item[$property];
         }
 
@@ -84,13 +78,30 @@ class TransformProvider implements TransformProviderInterface
             return $item->{$property}();
         }
 
-        if (property_exists($item, $property)) {
-            return $item->{$property};
-        }
-
         throw new UndefinedItemPropertyException(sprintf(
             'Undefined property "%s"', $property
         ));
+    }
+
+
+    /**
+     * @param TransformerInterface $transformer
+     * @param array $data
+     * @param array $parts
+     * @return array
+     */
+    private function bindData(TransformerInterface $transformer, array $data, array $parts)
+    {
+        $map = $transformer->getBindingMap();
+
+        foreach ($map as $property => $key) {
+            if (array_key_exists($property, $parts)) {
+                $data[$key] = $parts[$property];
+                unset($parts[$property]);
+            }
+        }
+
+        return array_merge($data, $parts);
     }
 
 }

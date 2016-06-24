@@ -13,8 +13,8 @@ class ArrayUserTransformer extends AbstractTransformer
     public function transform($item)
     {
         return [
-            'name' => $item['name'],
-            'email' => $item['email']
+            'name' => $item['user_name'],
+            'email' => $item['user_email']
         ];
     }
 

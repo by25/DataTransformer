@@ -14,6 +14,8 @@ interface TransformerInterface
      *
      * @param string|null $property Имя ресурса из которого будут извлечены данные для трасформации (ключ массива, название метода, название свойсва)
      * @param TransformerInterface $transformer
+     *
+     * @return $this
      */
     public function addTransformer($property, TransformerInterface $transformer);
 
@@ -26,19 +28,27 @@ interface TransformerInterface
 
 
     /**
+     * @param array $map [$result_key => $property]
+     * @return $this
+     */
+    public function setBindingMap(array $map = []);
+
+
+    /**
+     * Схема связывания внеших странсформеров к ключам нормализованного массива
+     *
+     * @return array
+     */
+    public function getBindingMap();
+
+
+    /**
      * Трансформировать значение
      *
      * @param mixed $item
      * @return array
      */
     public function transform($item);
-
-
-    /**
-     * Название поля массива, если этот трансформер включен в другой трансформер
-     * @return string|null
-     */
-    public function getIncludeKey();
 
 
 }

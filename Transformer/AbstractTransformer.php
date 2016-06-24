@@ -8,22 +8,48 @@ namespace Itmedia\ArrayTransformer\Transformer;
 
 abstract class AbstractTransformer implements TransformerInterface
 {
-
-
+    
     /**
      * @var TransformerInterface[]
      */
     private $transformers = [];
 
     /**
+     * @var array
+     */
+    private $bindingMap = [];
+    
+
+    /**
      * AbstractTransformer constructor.
      * @param array $transformers [[$property => $transformer]]
+     * @param array $map
      */
-    public function __construct(array $transformers = [])
+    public function __construct(array $transformers = [], array $map = [])
     {
-        $this->transformers = $transformers;
+        foreach ($transformers as $property => $transformer) {
+            $this->addTransformer($property, $transformer);
+        }
+
+        $this->setBindingMap($map);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function setBindingMap(array $map = [])
+    {
+        $this->bindingMap = $map;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBindingMap()
+    {
+        return $this->bindingMap;
+    }
 
     /**
      * {@inheritdoc}
@@ -31,6 +57,7 @@ abstract class AbstractTransformer implements TransformerInterface
     public function addTransformer($property, TransformerInterface $transformer)
     {
         $this->transformers[$property] = $transformer;
+        return $this;
     }
 
     /**
@@ -39,15 +66,6 @@ abstract class AbstractTransformer implements TransformerInterface
     public function getTransformers()
     {
         return $this->transformers;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIncludeKey()
-    {
-        return null;
     }
 
 
