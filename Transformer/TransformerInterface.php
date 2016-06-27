@@ -5,51 +5,19 @@
 
 namespace Itmedia\DataTransformer\Transformer;
 
+use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
 
 interface TransformerInterface
 {
 
-
     /**
      * TransformerInterface constructor.
-     * @param null|string $inputProperty Ключ массива или метод объекта входных данных, если null - обрабатывается весь набор данных
-     * @param null|string $outputKey На какой ключ вызодного массива замапить данные, если null - то маппим в корень (array_merge).
-     *                                      Поле может включать "[]", например "groups[]". В этом случае данные будут обработаны как коллекция
-     *                                      и присвоемы в к ключу "groups"
-     * @param TransformerInterface[] $transformers Вложенные трансформеры для обработки вложенных данных
+     * @param null|string $property Ключ массива или метод объекта входных данных, если null - обрабатывается весь набор данных
      */
-    public function __construct($inputProperty = null, $outputKey = null, array $transformers = []);
+    public function __construct($property = null);
 
 
-    /**
-     * Ключ массива или метод объекта входных данных, если null - обрабатывается весь набор данных
-     *
-     * @return string|null
-     */
     public function getProperty();
-
-    /**
-     * На какой ключ вызодного массива замапить данные, если null - то маппим в корень (array_merge).
-     *
-     * @return string|null
-     */
-    public function getOutputKey();
-
-
-    /**
-     * Добавить вложенный трансформер
-     * @param TransformerInterface $transformer
-     *
-     * @return $this
-     */
-    public function addTransformer(TransformerInterface $transformer);
-
-    /**
-     * Возвращает вложенные трансформеры
-     *
-     * @return TransformerInterface[]
-     */
-    public function getTransformers();
 
     /**
      * Трансформировать значение
@@ -57,15 +25,18 @@ interface TransformerInterface
      * @param mixed $item
      * @return array
      */
-    public function transformItem($item);
+    public function transform($item);
 
     /**
      * Трансформация данных
      *
-     * @param $item
+     * @param $resource
+     * @param bool $isCollection
      * @return array
+     *
+     * @throws UndefinedItemPropertyException
      */
-    public function createData($item);
+    public function createData($resource, $isCollection);
 
 
 }

@@ -10,7 +10,7 @@ use Itmedia\DataTransformer\Transformer\AbstractTransformer;
 
 class ArrayGroupTransformer extends AbstractTransformer
 {
-    public function transformItem($item)
+    public function transform($item)
     {
         return [
             'id' => $item['group_id'],

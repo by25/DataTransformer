@@ -10,7 +10,7 @@ use Itmedia\DataTransformer\Transformer\AbstractTransformer;
 
 class ArrayUserTransformer extends AbstractTransformer
 {
-    public function transformItem($item)
+    public function transform($item)
     {
         return [
             'name' => $item['user_name'],

@@ -12,126 +12,44 @@ abstract class AbstractTransformer implements TransformerInterface
 {
 
     /**
-     * @var TransformerInterface[]
-     */
-    private $transformers = [];
-
-    /**
      * @var string|null
      */
-    private $inputProperty;
-
-    /**
-     * @var string|null
-     */
-    private $outputKey;
+    private $property;
 
 
     /**
      * {@inheritdoc}
      */
-    public function __construct($inputProperty = null, $outputKey = null, array $transformers = [])
+    public function __construct($property = null)
     {
-        foreach ($transformers as $transformer) {
-            $this->addTransformer($transformer);
-        }
-
-        $this->inputProperty = $inputProperty;
-        if ($outputKey === null || $outputKey === false) {
-            $this->outputKey = $outputKey;
-        } else {
-            $this->outputKey = trim($outputKey);
-        }
-
+        $this->property = $property;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getProperty()
+    public function createData($resource, $isCollection)
     {
-        return $this->inputProperty;
-    }
+        $data = $this->fetchDataProperty($this->property, $resource);
 
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOutputKey()
-    {
-        return $this->outputKey;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addTransformer(TransformerInterface $transformer)
-    {
-        $this->transformers[] = $transformer;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTransformers()
-    {
-        return $this->transformers;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     *
-     * @throws \Exception
-     */
-    public function createData($item)
-    {
-        $data = $this->fetchDataProperty($this->getProperty(), $item);
-
-        if (!$this->isCollection()) {
-            $result = $this->transformItem($data);
-            return $this->mapToOutputArray($result);
+        if (!$isCollection) {
+            return $this->transform($data);
         }
 
         $result = [];
         foreach ($data as $value) {
-            $result[] = $this->transformItem($value);
+            $result[] = $this->transform($value);
         }
 
-        return $this->mapToOutputArray($result);
+        return $result;
     }
 
-
     /**
-     * Является коллекцией?
-     *
-     * @return bool
+     * @return null|string
      */
-    private function isCollection()
+    public function getProperty()
     {
-        return strpos((string)$this->getOutputKey(), '[]') !== false;
-    }
-
-
-    /**
-     * @param $data
-     * @return array
-     */
-    private function mapToOutputArray($data)
-    {
-        $key = $this->isCollection() ? str_replace('[]', '', $this->getOutputKey()) : $this->getOutputKey();
-
-        if ($key === null or $key === '') {
-            return $this->getProperty() ? [$this->getProperty() => $data] : $data;
-        }
-
-        if ($key === false) {
-            return $data;
-        }
-
-        return [$key => $data];
+        return $this->property;
     }
 
 

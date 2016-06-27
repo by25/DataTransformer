@@ -10,7 +10,7 @@ use Itmedia\DataTransformer\Transformer\AbstractTransformer;
 
 class ObjectMethodsUserTransformer extends AbstractTransformer
 {
-    public function transformItem($item)
+    public function transform($item)
     {
         return [
             'email' => $item->getEmail(),

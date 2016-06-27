@@ -23,7 +23,7 @@ class TransformProviderTest extends TestCase
         $user->method('getName')->willReturn('Andrey');
         $user->method('getEmail')->willReturn('Andrey@email.com');
 
-        $item = [
+        $resource = [
             'user_name' => 'Tester',
             'user_email' => 'email@email.com',
             'password' => 'mypass',
@@ -40,20 +40,18 @@ class TransformProviderTest extends TestCase
             ]
         ];
 
-        $provider = new TransformProvider();
+        $provider = new TransformProvider($resource);
 
-        $transformer = new ArrayUserTransformer(null, 'result');
-        $transformer->addTransformer(new ArrayGroupTransformer('user_group', 'group[]'));
-        $transformer->addTransformer(new ObjectMethodsUserTransformer('friend', 'my-friend'));
-
-        $result = $provider->transform($item, $transformer);
+        $result = $provider
+            ->addTransformer(new ArrayUserTransformer())
+            ->addTransformer(new ObjectMethodsUserTransformer('friend'), 'my-friend')
+            ->addCollectionTransformer(new ArrayGroupTransformer('user_group'), 'group')
+            ->getArray();
 
 
         $this->assertEquals($result, [
-            'result' => [
-                'name' => 'Tester',
-                'email' => 'email@email.com',
-            ],
+            'name' => 'Tester',
+            'email' => 'email@email.com',
             'my-friend' => [
                 'name' => 'Andrey',
                 'email' => 'Andrey@email.com',
@@ -69,8 +67,6 @@ class TransformProviderTest extends TestCase
                 ]
             ]
         ]);
-
-
     }
 
 
