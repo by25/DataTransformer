@@ -11,12 +11,14 @@ use Itmedia\DataTransformer\Transformer\TransformerInterface;
 interface TransformProviderInterface
 {
 
-    /**
-     * @param $resource
-     * @param TransformerInterface $transformer
-     * @return array
-     */
-    public function transform($resource, TransformerInterface $transformer);
+    public function __construct($resource);
 
 
+    public function addTransformer(TransformerInterface $transformer, $field = null);
+
+
+    public function addCollectionTransformer(TransformerInterface $transformer, $field = null);
+
+
+    public function getArray();
 }

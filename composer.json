@@ -1,0 +1,21 @@
+{
+  "name": "itmedia/data-transformer",
+  "type": "library",
+  "description": "DataTransformer",
+  "homepage": "https://github.com/by25/DataTransformer",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andrey Kulikovsky",
+      "homepage": "http://itmedia.by/"
+    }
+  ],
+  "require": {
+    "php": ">=5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Itmedia\\DataTransformer\\": ""
+    }
+  }
+}

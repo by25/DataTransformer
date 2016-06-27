@@ -17,6 +17,9 @@ class TransformProvider
      */
     private $resource;
 
+    /**
+     * @var array
+     */
     private $output = [];
 
 
@@ -30,16 +33,16 @@ class TransformProvider
     }
 
 
-    public function addTransformer(TransformerInterface $transformer, $field = null, $required = true)
+    public function addTransformer(TransformerInterface $transformer, $field = null)
     {
-        $this->transform($transformer, false, $field, $required);
+        $this->transform($transformer, false, $field, true);
         return $this;
     }
 
 
-    public function addCollectionTransformer(TransformerInterface $transformer, $field = null, $required = true)
+    public function addCollectionTransformer(TransformerInterface $transformer, $field = null)
     {
-        $this->transform($transformer, true, $field, $required);
+        $this->transform($transformer, true, $field, true);
         return $this;
     }
 
@@ -68,7 +71,7 @@ class TransformProvider
 
         if ($field) {
             $this->output[$field] = $result;
-        } elseif ($result) {
+        } elseif (is_array($result)) {
             $this->output = array_merge($this->output, $result);
         }
     }
