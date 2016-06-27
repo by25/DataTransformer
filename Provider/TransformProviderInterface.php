@@ -12,18 +12,11 @@ interface TransformProviderInterface
 {
 
     /**
-     * @param $item
+     * @param $resource
      * @param TransformerInterface $transformer
      * @return array
      */
-    public function transform($item, TransformerInterface $transformer);
-
-    /**
-     * @param array $collection
-     * @param TransformerInterface $transformer
-     * @return array
-     */
-    public function transformCollection(array $collection, TransformerInterface $transformer);
+    public function transform($resource, TransformerInterface $transformer);
 
 
 }

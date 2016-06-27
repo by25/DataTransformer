@@ -6,57 +6,69 @@
 namespace Itmedia\DataTransformer\Transformer;
 
 
+use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
+
 abstract class AbstractTransformer implements TransformerInterface
 {
-    
+
     /**
      * @var TransformerInterface[]
      */
     private $transformers = [];
 
     /**
-     * @var array
+     * @var string|null
      */
-    private $bindingMap = [];
-    
+    private $inputProperty;
 
     /**
-     * AbstractTransformer constructor.
-     * @param array $transformers [[$property => $transformer]]
-     * @param array $map
+     * @var string|null
      */
-    public function __construct(array $transformers = [], array $map = [])
+    private $outputKey;
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($inputProperty = null, $outputKey = null, array $transformers = [])
     {
-        foreach ($transformers as $property => $transformer) {
-            $this->addTransformer($property, $transformer);
+        foreach ($transformers as $transformer) {
+            $this->addTransformer($transformer);
         }
 
-        $this->setBindingMap($map);
+        $this->inputProperty = $inputProperty;
+        if ($outputKey === null || $outputKey === false) {
+            $this->outputKey = $outputKey;
+        } else {
+            $this->outputKey = trim($outputKey);
+        }
+
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setBindingMap(array $map = [])
+    public function getProperty()
     {
-        $this->bindingMap = $map;
-        return $this;
+        return $this->inputProperty;
     }
+
 
     /**
      * {@inheritdoc}
      */
-    public function getBindingMap()
+    public function getOutputKey()
     {
-        return $this->bindingMap;
+        return $this->outputKey;
     }
+
 
     /**
      * {@inheritdoc}
      */
-    public function addTransformer($property, TransformerInterface $transformer)
+    public function addTransformer(TransformerInterface $transformer)
     {
-        $this->transformers[$property] = $transformer;
+        $this->transformers[] = $transformer;
         return $this;
     }
 
@@ -68,5 +80,87 @@ abstract class AbstractTransformer implements TransformerInterface
         return $this->transformers;
     }
 
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \Exception
+     */
+    public function createData($item)
+    {
+        $data = $this->fetchDataProperty($this->getProperty(), $item);
+
+        if (!$this->isCollection()) {
+            $result = $this->transformItem($data);
+            return $this->mapToOutputArray($result);
+        }
+
+        $result = [];
+        foreach ($data as $value) {
+            $result[] = $this->transformItem($value);
+        }
+
+        return $this->mapToOutputArray($result);
+    }
+
+
+    /**
+     * Является коллекцией?
+     *
+     * @return bool
+     */
+    private function isCollection()
+    {
+        return strpos((string)$this->getOutputKey(), '[]') !== false;
+    }
+
+
+    /**
+     * @param $data
+     * @return array
+     */
+    private function mapToOutputArray($data)
+    {
+        $key = $this->isCollection() ? str_replace('[]', '', $this->getOutputKey()) : $this->getOutputKey();
+
+        if ($key === null or $key === '') {
+            return $this->getProperty() ? [$this->getProperty() => $data] : $data;
+        }
+
+        if ($key === false) {
+            return $data;
+        }
+
+        return [$key => $data];
+    }
+
+
+    /**
+     * Извлекает значение из $item
+     *
+     * @param $property
+     * @param $item
+     * @return mixed
+     *
+     * @throws UndefinedItemPropertyException
+     */
+    private function fetchDataProperty($property, $item)
+    {
+        if (!$property) {
+            return $item;
+        }
+
+        if (is_array($item) && array_key_exists($property, $item)) {
+            return $item[$property];
+        }
+
+        if (method_exists($item, $property)) {
+            return $item->{$property}();
+        }
+
+        throw new UndefinedItemPropertyException(sprintf(
+            'Undefined property "%s"', $property
+        ));
+    }
 
 }
