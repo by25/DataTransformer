@@ -6,15 +6,15 @@
 namespace Itmedia\DataTransformer\Tests\Stub\Transformer;
 
 
-use Itmedia\DataTransformer\Transformer\AbstractTransformer;
+use Itmedia\DataTransformer\Transformer\Transformer;
 
-class ObjectMethodsUserTransformer extends AbstractTransformer
+class ObjectMethodsUserTransformer extends Transformer
 {
-    public function transform($item)
+    public function transform($resource)
     {
         return [
-            'email' => $item->getEmail(),
-            'name' => $item->getName(),
+            'email' => $resource->getEmail(),
+            'name' => $resource->getName(),
         ];
     }
 

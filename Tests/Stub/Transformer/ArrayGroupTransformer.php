@@ -6,15 +6,15 @@
 namespace Itmedia\DataTransformer\Tests\Stub\Transformer;
 
 
-use Itmedia\DataTransformer\Transformer\AbstractTransformer;
+use Itmedia\DataTransformer\Transformer\Transformer;
 
-class ArrayGroupTransformer extends AbstractTransformer
+class ArrayGroupTransformer extends Transformer
 {
-    public function transform($item)
+    public function transform($resource)
     {
         return [
-            'id' => $item['group_id'],
-            'name' => $item['group_name']
+            'id' => $resource['group_id'],
+            'name' => $resource['group_name']
         ];
     }
 

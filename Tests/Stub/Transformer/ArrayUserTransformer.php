@@ -6,15 +6,15 @@
 namespace Itmedia\DataTransformer\Tests\Stub\Transformer;
 
 
-use Itmedia\DataTransformer\Transformer\AbstractTransformer;
+use Itmedia\DataTransformer\Transformer\Transformer;
 
-class ArrayUserTransformer extends AbstractTransformer
+class ArrayUserTransformer extends Transformer
 {
-    public function transform($item)
+    public function transform($resource)
     {
         return [
-            'name' => $item['user_name'],
-            'email' => $item['user_email']
+            'name' => $resource['user_name'],
+            'email' => $resource['user_email']
         ];
     }
 

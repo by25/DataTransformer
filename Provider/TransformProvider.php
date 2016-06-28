@@ -7,9 +7,10 @@ namespace Itmedia\DataTransformer\Provider;
 
 
 use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
+use Itmedia\DataTransformer\Transformer\Collection;
 use Itmedia\DataTransformer\Transformer\TransformerInterface;
 
-class TransformProvider
+class TransformProvider implements TransformProviderInterface
 {
 
     /**
@@ -24,56 +25,37 @@ class TransformProvider
 
 
     /**
-     * TransformProvider constructor.
-     * @param mixed $resource
+     * {@inheritdoc}
      */
-    public function __construct($resource)
+    public function __construct($resource, TransformerInterface $transformer)
     {
-        $this->resource = $resource;
+        $this->output = $transformer->execute($resource);
     }
 
 
-    public function addTransformer(TransformerInterface $transformer, $field = null)
-    {
-        $this->transform($transformer, false, $field, true);
-        return $this;
-    }
-
-
-    public function addCollectionTransformer(TransformerInterface $transformer, $field = null)
-    {
-        $this->transform($transformer, true, $field, true);
-        return $this;
-    }
-
-
-    /**
-     * @throws \Exception
-     * @return array
-     */
-    public function getArray()
+    public function createData()
     {
         return $this->output;
     }
 
 
-    private function transform(TransformerInterface $transformer, $isCollection, $field, $required)
+    private function fetchDataProperty($resource, TransformerInterface $transformer)
     {
-        $result = null;
-        try {
-            $result = $transformer->createData($this->resource, (bool)$isCollection);
-        } catch (UndefinedItemPropertyException $exc) {
-            if ($required) {
-                throw $exc;
-            }
+        if (!$transformer->getProperty()) {
+            return $resource;
         }
 
-
-        if ($field) {
-            $this->output[$field] = $result;
-        } elseif (is_array($result)) {
-            $this->output = array_merge($this->output, $result);
+        if (is_array($resource) && array_key_exists($transformer->getProperty(), $resource)) {
+            return $resource[$transformer->getProperty()];
         }
+
+        if (method_exists($resource, $transformer->getProperty())) {
+            return $resource->{$transformer->getProperty()}();
+        }
+
+        throw new UndefinedItemPropertyException(sprintf(
+            'Undefined property "%s"', $transformer->getProperty()
+        ));
     }
 
 }
