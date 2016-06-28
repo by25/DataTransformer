@@ -9,6 +9,7 @@ namespace Itmedia\DataTransformer\Tests\Transformer;
 use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ObjectMethodsUserTransformer;
+use Itmedia\DataTransformer\Transformer\Collection;
 use PHPUnit\Framework\TestCase;
 
 class TransformerTest extends TestCase
@@ -20,22 +21,13 @@ class TransformerTest extends TestCase
         'property' => 1
     ];
 
-    private $users = [
-        [
-            'user_name' => 'Tester',
-            'user_email' => 'tester1@email.com'
-        ],
-        [
-            'user_name' => 'Tester2',
-            'user_email' => 'tester2@email.com'
-        ],
-    ];
+  
 
 
     public function testArrayTransform()
     {
         $transformer = new ArrayUserTransformer();
-        $result = $transformer->transform($this->user);
+        $result = $transformer->map($this->user);
 
         $this->assertEquals($result, [
             'name' => 'Tester',
@@ -54,7 +46,7 @@ class TransformerTest extends TestCase
 
         $transformer = new ObjectMethodsUserTransformer();
 
-        $result = $transformer->transform($user);
+        $result = $transformer->map($user);
         $this->assertEquals($result, [
             'name' => 'Tester',
             'email' => 'email@email.com'
@@ -62,10 +54,10 @@ class TransformerTest extends TestCase
     }
 
 
-    public function testOnceCreateData()
+    public function testOnceExecute()
     {
         $transformer = new ArrayUserTransformer();
-        $result = $transformer->createData($this->user, false);
+        $result = $transformer->execute($this->user, true);
 
         $this->assertEquals($result, [
             'name' => 'Tester',
@@ -74,47 +66,27 @@ class TransformerTest extends TestCase
 
 
         $transformer = new ArrayUserTransformer('data');
-        $result = $transformer->createData([
+        $result = $transformer->execute([
+            'data' => $this->user
+        ], false);
+
+        $this->assertEquals($result, [
+            'data' => [
+                'name' => 'Tester',
+                'email' => 'email@email.com'
+            ]
+        ]);
+
+
+        $transformer = new ArrayUserTransformer('data', ['field' => false]);
+        $result = $transformer->execute([
             'data' => $this->user
         ], false);
 
         $this->assertEquals($result, [
             'name' => 'Tester',
             'email' => 'email@email.com'
-        ]);
 
-    }
-
-
-    public function testCollectionCreateData()
-    {
-        $transformer = new ArrayUserTransformer();
-        $result = $transformer->createData($this->users, true);
-
-        $this->assertEquals($result, [
-            [
-                'name' => 'Tester',
-                'email' => 'tester1@email.com'
-            ],
-            [
-                'name' => 'Tester2',
-                'email' => 'tester2@email.com'
-            ]
-        ]);
-
-
-        $transformer = new ArrayUserTransformer('data');
-        $result = $transformer->createData(['data' => $this->users], true);
-
-        $this->assertEquals($result, [
-            [
-                'name' => 'Tester',
-                'email' => 'tester1@email.com'
-            ],
-            [
-                'name' => 'Tester2',
-                'email' => 'tester2@email.com'
-            ]
         ]);
 
     }
@@ -123,9 +95,9 @@ class TransformerTest extends TestCase
     public function testExceptions()
     {
         $this->expectException(UndefinedItemPropertyException::class);
-        
-        $transformer = new ObjectMethodsUserTransformer('test');
-        $transformer->createData($this->user, true);
+
+        $transformer = new ObjectMethodsUserTransformer('test', ['required' => true]);
+        $transformer->execute($this->user, false);
     }
 
 

@@ -10,7 +10,6 @@ use Itmedia\DataTransformer\Provider\TransformProvider;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayGroupTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ObjectMethodsUserTransformer;
-use Itmedia\DataTransformer\Transformer\Collection;
 use PHPUnit\Framework\TestCase;
 
 class TransformProviderTest extends TestCase
@@ -45,10 +44,9 @@ class TransformProviderTest extends TestCase
         $transformer->add(new ObjectMethodsUserTransformer('friend', ['field' => 'my-friend']));
         $transformer->addCollection(new ArrayGroupTransformer('user_group', ['field' => 'groups']));
 
-        $provider = new TransformProvider($resource, $transformer);
+        $provider = new TransformProvider();
 
-
-        $result = $provider->createData();
+        $result = $provider->transformItem($resource, $transformer);
 
         $this->assertEquals($result, [
             'name' => 'Tester',
@@ -113,11 +111,10 @@ class TransformProviderTest extends TestCase
         $itemTransformer = new ArrayUserTransformer();
         $itemTransformer->add(new ArrayUserTransformer('client', ['required' => false]));
         $itemTransformer->addCollection(new ArrayGroupTransformer('user_group', ['field' => 'groups']));
-        $transformer = new Collection($itemTransformer);
 
-        $provider = new TransformProvider($resource, $transformer);
+        $provider = new TransformProvider();
 
-        $result = $provider->createData();
+        $result = $provider->transformCollection($resource, $itemTransformer);
 
         $this->assertEquals($result, [
             [

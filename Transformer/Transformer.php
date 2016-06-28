@@ -8,7 +8,7 @@ namespace Itmedia\DataTransformer\Transformer;
 
 use Itmedia\DataTransformer\DataExtractor;
 
-abstract class Transformer implements TransformerInterface
+abstract class Transformer extends AbstractTransformer
 {
 
     /**
@@ -31,6 +31,11 @@ abstract class Transformer implements TransformerInterface
     private $transformers = [];
 
 
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \InvalidArgumentException
+     */
     public function __construct($property = null, array $options = [])
     {
         $this->property = $property;
@@ -44,12 +49,18 @@ abstract class Transformer implements TransformerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function add(TransformerInterface $transformer)
     {
         $this->transformers[] = $transformer;
     }
 
 
+    /**
+     * {@inheritdoc}
+     */
     public function addCollection(TransformerInterface $transformer)
     {
         $this->transformers[] = new Collection($transformer);
@@ -57,53 +68,53 @@ abstract class Transformer implements TransformerInterface
 
 
     /**
-     * @return TransformerInterface[]
+     * {@inheritdoc}
      */
     public function getTransformers()
     {
         return $this->transformers;
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
     public function getOptions()
     {
         return $this->options;
     }
 
+
     /**
-     * @return null|string
+     * {@inheritdoc}
      */
     public function getProperty()
     {
         return $this->property;
     }
 
-    public function execute($resource)
+
+    /**
+     * {@inheritdoc}
+     */
+    public function execute($resource, $strict)
     {
+        $rawData = $this->fetchDataProperty($resource, $this);
 
-        $rawData = DataExtractor::fetchDataProperty($resource, $this);
-//        var_dump($this->property, static::class, $rawData);
+        if (!$rawData && !$strict) {
+            return null;
+        }
 
-        $result = $this->transform($rawData);
+        $result = $this->map($rawData);
 
         foreach ($this->transformers as $childTransformers) {
-            $childData = $childTransformers->execute($rawData);
+            $childData = $childTransformers->execute($rawData, $strict);
             if ($childData) {
-                $result = array_merge($result, $childData);
+                $result += $childData;
             }
         }
 
-        $key = $this->getOptions()['field'];
-        if ($key === null) {
-            $key = $this->getProperty();
-        }
-        if ($key) {
-            return [
-                $key => $result
-            ];
-        } else {
-            return $result;
-        }
-
+        return $this->returnMappedData($result);
     }
 
 

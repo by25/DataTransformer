@@ -10,7 +10,7 @@ use Itmedia\DataTransformer\Transformer\Transformer;
 
 class ArrayGroupTransformer extends Transformer
 {
-    public function transform($resource)
+    public function map($resource)
     {
         return [
             'id' => $resource['group_id'],

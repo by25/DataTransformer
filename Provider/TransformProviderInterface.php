@@ -11,9 +11,30 @@ use Itmedia\DataTransformer\Transformer\TransformerInterface;
 interface TransformProviderInterface
 {
 
+    /**
+     * TransformProvider constructor.
+     * @param array $options
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(array $options = []);
+
 
     /**
-     * @return string
+     * Трансформация единичного элемента
+     *
+     * @param $resource
+     * @param TransformerInterface $transformer
+     * @return array|null
      */
-//    public function createData();
+    public function transformItem($resource, TransformerInterface $transformer);
+
+
+    /**
+     * Трансформация коллекции
+     *
+     * @param $resource
+     * @param TransformerInterface $transformer
+     * @return array|null
+     */
+    public function transformCollection($resource, TransformerInterface $transformer);
 }

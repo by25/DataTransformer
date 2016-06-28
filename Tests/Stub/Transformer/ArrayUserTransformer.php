@@ -10,7 +10,7 @@ use Itmedia\DataTransformer\Transformer\Transformer;
 
 class ArrayUserTransformer extends Transformer
 {
-    public function transform($resource)
+    public function map($resource)
     {
         return [
             'name' => $resource['user_name'],

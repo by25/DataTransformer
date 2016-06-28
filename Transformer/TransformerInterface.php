@@ -5,33 +5,53 @@
 
 namespace Itmedia\DataTransformer\Transformer;
 
-use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
-
 interface TransformerInterface
 {
 
-
+    /**
+     * @return string
+     */
     public function getProperty();
 
     /**
-     * Трансформировать значение
+     * Карта трансформации значения
      *
      * @param mixed $resource
      * @return array
+     *
+     * @throws \InvalidArgumentException
      */
-    public function transform($resource);
+    public function map($resource);
 
-
+    /**
+     * @param TransformerInterface $transformer
+     */
     public function add(TransformerInterface $transformer);
 
+    /**
+     * @param TransformerInterface $transformer
+     */
     public function addCollection(TransformerInterface $transformer);
 
 
+    /**
+     * @return array
+     */
     public function getOptions();
 
+    /**
+     * @return TransformerInterface[]
+     */
     public function getTransformers();
 
-    public function execute($resource);
+    /**
+     * @param $resource
+     * @param $strict
+     * @return array|null
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function execute($resource, $strict);
 
 
 }

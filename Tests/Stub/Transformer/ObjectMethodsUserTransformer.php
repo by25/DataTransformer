@@ -10,7 +10,7 @@ use Itmedia\DataTransformer\Transformer\Transformer;
 
 class ObjectMethodsUserTransformer extends Transformer
 {
-    public function transform($resource)
+    public function map($resource)
     {
         return [
             'email' => $resource->getEmail(),

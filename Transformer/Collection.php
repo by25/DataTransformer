@@ -9,7 +9,7 @@ namespace Itmedia\DataTransformer\Transformer;
 use Itmedia\DataTransformer\DataExtractor;
 use Itmedia\DataTransformer\Exception\ExpectedCollectionException;
 
-class Collection implements TransformerInterface
+class Collection extends AbstractTransformer
 {
 
     /**
@@ -27,76 +27,90 @@ class Collection implements TransformerInterface
     }
 
 
+    /**
+     * {@inheritdoc}
+     */
     public function getProperty()
     {
         return $this->transformer->getProperty();
     }
 
 
-    public function transform($resource)
+    /**
+     * {@inheritdoc}
+     */
+    public function map($resource)
     {
-//        return $this->transformer->transform($resource);
         if (!is_array($resource)) {
-            throw new ExpectedCollectionException('Resource must be array');
+            throw new \InvalidArgumentException('Resource must be array');
         }
 
         $data = [];
         foreach ($resource as $item) {
-            $data[] = $this->transformer->transform($item);
+            $data[] = $this->transformer->map($item);
         }
 
         return $data;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function add(TransformerInterface $transformer)
     {
         return $this->transformer->add($transformer);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addCollection(TransformerInterface $transformer)
     {
         return $this->transformer->addCollection($transformer);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getOptions()
     {
         return $this->transformer->getOptions();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTransformers()
     {
         return $this->transformer->getTransformers();
     }
 
 
-    public function execute($resource)
+    /**
+     * {@inheritdoc}
+     */
+    public function execute($resource, $strict)
     {
-        $rawData = DataExtractor::fetchDataProperty($resource, $this);
-        $result = $this->transform($rawData);
+        $rawData = $this->fetchDataProperty($resource, $this);
+        
+        if (!$rawData && !$strict) {
+            return null;
+        }
+
+        $result = $this->map($rawData);
 
         foreach ($this->getTransformers() as $childTransformers) {
-
+            
             foreach ($rawData as $key => $item) {
-                $childData = $childTransformers->execute($item);
+                $childData = $childTransformers->execute($item, $strict);
                 if ($childData) {
-                    $result[$key] = array_merge($result[$key], $childData);
+                    $result[$key] += $childData;
                 }
             }
+            
         }
 
-        $key = $this->getOptions()['field'];
-        if ($key === null) {
-            $key = $this->getProperty();
-        }
-
-        if ($key) {
-            return [
-                $key => $result
-            ];
-        } else {
-            return $result;
-        }
-
+        return $this->returnMappedData($result);
     }
 
 

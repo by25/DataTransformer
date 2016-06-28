@@ -5,57 +5,46 @@
 
 namespace Itmedia\DataTransformer\Provider;
 
-
-use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
 use Itmedia\DataTransformer\Transformer\Collection;
 use Itmedia\DataTransformer\Transformer\TransformerInterface;
 
+
 class TransformProvider implements TransformProviderInterface
 {
-
-    /**
-     * @var mixed
-     */
-    private $resource;
-
-    /**
-     * @var array
-     */
-    private $output = [];
+    private $options = [
+        'strict' => true
+    ];
 
 
     /**
      * {@inheritdoc}
      */
-    public function __construct($resource, TransformerInterface $transformer)
+    public function __construct(array $options = [])
     {
-        $this->output = $transformer->execute($resource);
+        foreach ($options as $key => $option) {
+            if (!array_key_exists($key, $this->options)) {
+                throw new \InvalidArgumentException(sprintf('Undefined option "%s"', $key));
+            }
+            $this->options[$key] = $option;
+        }
     }
 
 
-    public function createData()
+    /**
+     * {@inheritdoc}
+     */
+    public function transformItem($resource, TransformerInterface $transformer)
     {
-        return $this->output;
+        return $transformer->execute($resource, $this->options['strict']);
     }
 
 
-    private function fetchDataProperty($resource, TransformerInterface $transformer)
+    /**
+     * {@inheritdoc}
+     */
+    public function transformCollection($resource, TransformerInterface $transformer)
     {
-        if (!$transformer->getProperty()) {
-            return $resource;
-        }
-
-        if (is_array($resource) && array_key_exists($transformer->getProperty(), $resource)) {
-            return $resource[$transformer->getProperty()];
-        }
-
-        if (method_exists($resource, $transformer->getProperty())) {
-            return $resource->{$transformer->getProperty()}();
-        }
-
-        throw new UndefinedItemPropertyException(sprintf(
-            'Undefined property "%s"', $transformer->getProperty()
-        ));
+        return $this->transformItem($resource, new Collection($transformer));
     }
 
 }
