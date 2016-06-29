@@ -10,6 +10,7 @@ use Itmedia\DataTransformer\Provider\TransformProvider;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayGroupTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ObjectMethodsUserTransformer;
+use Itmedia\DataTransformer\Transformer\Collection;
 use PHPUnit\Framework\TestCase;
 
 class TransformProviderTest extends TestCase
@@ -154,6 +155,100 @@ class TransformProviderTest extends TestCase
                     'email' => null,
                 ]
             ]
+        ]);
+    }
+
+
+    public function testRecursiveCollectionTransform()
+    {
+        $resource = [
+            [
+                'user_name' => 'Tester',
+                'user_email' => 'email@email.com',
+                'employer' => [
+                    [
+                        'user_name' => 'Client1',
+                        'user_email' => 'client1@email.com',
+                        'client_group' => [
+                            [
+                                'group_id' => 1,
+                                'group_name' => 'User'
+                            ],
+                            [
+                                'group_id' => 2,
+                                'group_name' => 'Manager'
+                            ]
+                        ]
+                    ],
+                    [
+                        'user_name' => 'Client2',
+                        'user_email' => 'client2@email.com',
+                        'client_group' => [
+                            [
+                                'group_id' => 3,
+                                'group_name' => 'User'
+                            ],
+                            [
+                                'group_id' => 4,
+                                'group_name' => 'Manager'
+                            ]
+                        ]
+                    ]
+                ],
+
+            ],
+        ];
+
+
+        $itemTransformer = new ArrayUserTransformer();
+
+        $clientTransformer = new Collection(new ArrayUserTransformer('employer', ['field' => 'employers']));
+        $clientTransformer->addCollection(new ArrayGroupTransformer('client_group', ['field' => 'groups']));
+
+        $itemTransformer->add($clientTransformer);
+
+
+        $provider = new TransformProvider();
+
+        $result = $provider->transformCollection($resource, $itemTransformer);
+
+
+        $this->assertEquals($result, [
+            [
+                'name' => 'Tester',
+                'email' => 'email@email.com',
+                'employers' => [
+                    [
+                        'name' => 'Client1',
+                        'email' => 'client1@email.com',
+                        'groups' => [
+                            [
+                                'id' => 1,
+                                'name' => 'User'
+                            ],
+                            [
+                                'id' => 2,
+                                'name' => 'Manager'
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'Client2',
+                        'email' => 'client2@email.com',
+                        'groups' => [
+                            [
+                                'id' => 3,
+                                'name' => 'User'
+                            ],
+                            [
+                                'id' => 4,
+                                'name' => 'Manager'
+                            ]
+                        ]
+                    ]
+                ],
+
+            ],
         ]);
     }
 
