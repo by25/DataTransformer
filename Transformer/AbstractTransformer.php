@@ -11,6 +11,10 @@ use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
 abstract class AbstractTransformer implements TransformerInterface
 {
 
+    /**
+     * @param $data
+     * @return array
+     */
     protected function returnMappedData($data)
     {
         $key = $this->getOptions()['field'];
@@ -27,6 +31,15 @@ abstract class AbstractTransformer implements TransformerInterface
     }
 
 
+    /**
+     * Получить данные из ресурса
+     *
+     * @param $resource
+     * @param TransformerInterface $transformer
+     * @return mixed|null
+     *
+     * @throws UndefinedItemPropertyException
+     */
     protected function fetchDataProperty($resource, TransformerInterface $transformer)
     {
         if (!$transformer->getProperty()) {

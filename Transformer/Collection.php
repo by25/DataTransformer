@@ -89,25 +89,25 @@ class Collection extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
-    public function execute($resource, $strict)
+    public function execute($resource)
     {
         $rawData = $this->fetchDataProperty($resource, $this);
-        
-        if (!$rawData && !$strict) {
+
+        if (!$rawData) {
             return null;
         }
 
         $result = $this->map($rawData);
 
         foreach ($this->getTransformers() as $childTransformers) {
-            
+
             foreach ($rawData as $key => $item) {
-                $childData = $childTransformers->execute($item, $strict);
+                $childData = $childTransformers->execute($item);
                 if ($childData) {
                     $result[$key] += $childData;
                 }
             }
-            
+
         }
 
         return $this->returnMappedData($result);

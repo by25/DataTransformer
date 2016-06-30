@@ -18,5 +18,4 @@ class ArrayUserTransformer extends Transformer
         ];
     }
 
-
 }

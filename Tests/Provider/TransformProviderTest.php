@@ -45,9 +45,9 @@ class TransformProviderTest extends TestCase
         $transformer->add(new ObjectMethodsUserTransformer('friend', ['field' => 'my-friend']));
         $transformer->addCollection(new ArrayGroupTransformer('user_group', ['field' => 'groups']));
 
-        $provider = new TransformProvider();
+        $transformProvider = new TransformProvider(['root_key' => null]);
 
-        $result = $provider->transformItem($resource, $transformer);
+        $result = $transformProvider->transformItem($resource, $transformer);
 
         $this->assertEquals($result, [
             'name' => 'Tester',
@@ -150,10 +150,6 @@ class TransformProviderTest extends TestCase
                         'name' => 'Manager'
                     ]
                 ],
-                'client' => [
-                    'name' => null,
-                    'email' => null,
-                ]
             ]
         ]);
     }
@@ -208,12 +204,12 @@ class TransformProviderTest extends TestCase
         $itemTransformer->add($clientTransformer);
 
 
-        $provider = new TransformProvider();
+        $provider = new TransformProvider(['root_key' => 'my-data']);
 
         $result = $provider->transformCollection($resource, $itemTransformer);
 
 
-        $this->assertEquals($result, [
+        $this->assertEquals($result['my-data'], [
             [
                 'name' => 'Tester',
                 'email' => 'email@email.com',

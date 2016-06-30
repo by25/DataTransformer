@@ -9,6 +9,8 @@ interface TransformerInterface
 {
 
     /**
+     * Свойство, по которому будет происходить выборка значения для последующей трансформации
+     *
      * @return string
      */
     public function getProperty();
@@ -24,34 +26,42 @@ interface TransformerInterface
     public function map($resource);
 
     /**
+     * Добавить трансформер
+     *
      * @param TransformerInterface $transformer
      */
     public function add(TransformerInterface $transformer);
 
     /**
+     * Добавить трансформер для коллекции.
+     * Аналог `Transformer::add(new Collection($transformer))`
+     *
      * @param TransformerInterface $transformer
      */
     public function addCollection(TransformerInterface $transformer);
 
 
     /**
+     * Опции
+     *
      * @return array
      */
     public function getOptions();
 
     /**
+     * Вложенные трансформеры
+     *
      * @return TransformerInterface[]
      */
     public function getTransformers();
 
     /**
      * @param $resource
-     * @param $strict
      * @return array|null
      *
      * @throws \InvalidArgumentException
      */
-    public function execute($resource, $strict);
+    public function execute($resource);
 
 
 }

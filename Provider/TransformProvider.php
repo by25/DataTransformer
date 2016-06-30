@@ -12,7 +12,7 @@ use Itmedia\DataTransformer\Transformer\TransformerInterface;
 class TransformProvider implements TransformProviderInterface
 {
     private $options = [
-        'strict' => true
+        'root_key' => null
     ];
 
 
@@ -32,15 +32,26 @@ class TransformProvider implements TransformProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function transformItem($resource, TransformerInterface $transformer)
     {
-        return $transformer->execute($resource, $this->options['strict']);
+        $data = $transformer->execute($resource);
+
+        $rootKey = $this->options['root_key'];
+        if ($rootKey) {
+            return [$rootKey => $data];
+        }
+
+        return $data;
     }
 
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function transformCollection($resource, TransformerInterface $transformer)
     {

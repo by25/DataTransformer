@@ -5,9 +5,6 @@
 
 namespace Itmedia\DataTransformer\Transformer;
 
-
-use Itmedia\DataTransformer\DataExtractor;
-
 abstract class Transformer extends AbstractTransformer
 {
 
@@ -32,7 +29,18 @@ abstract class Transformer extends AbstractTransformer
 
 
     /**
-     * {@inheritdoc}
+     * Transformer constructor.
+     * @param null|string $property Свойство, по которому будет происходить выборка значения для последующей трансформации
+     * @param array $options Опции $key=>$value.
+     *
+     * Доступные опции:
+     *  - `field`  Название ключа массива, на который будет присвоен результат трансформации:
+     *      - string - Название ключа
+     *      - null - Автоматически вычислить. Если коллекция, то значение $property иначе объединиться с корневым масивом
+     *      - false - объединение с корневым масивом
+     *
+     *  - `required` - Проверка наличия $property (выкидывается исключение)
+     *
      *
      * @throws \InvalidArgumentException
      */
@@ -97,18 +105,18 @@ abstract class Transformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
-    public function execute($resource, $strict)
+    public function execute($resource)
     {
         $rawData = $this->fetchDataProperty($resource, $this);
 
-        if (!$rawData && !$strict) {
+        if (!$rawData) {
             return null;
         }
 
         $result = $this->map($rawData);
 
         foreach ($this->transformers as $childTransformers) {
-            $childData = $childTransformers->execute($rawData, $strict);
+            $childData = $childTransformers->execute($rawData);
             if ($childData) {
                 $result += $childData;
             }
