@@ -6,6 +6,13 @@ DataTransformer
 
 Библиотека для трансформации данных в массивы, на основании предопределенной схемы (Transformer).
 
+Install
+-------
+
+```
+composer require itmedia/data-transformer
+```
+
 
 Пример использования
 --------------------
