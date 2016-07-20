@@ -22,13 +22,18 @@ class CollectionTest extends TestCase
             'user_name' => 'Tester2',
             'user_email' => 'tester2@email.com'
         ],
+        [
+            'user_name' => 'Tester-ignored',
+            'user_email' => 'tester2@email.com',
+            'ignore_me' => 'bla-bla'
+        ],
     ];
 
 
     public function testExecute()
     {
         $transformer = new Collection(new ArrayUserTransformer());
-        $result = $transformer->execute($this->users, true);
+        $result = $transformer->execute($this->users);
 
         $this->assertEquals($result, [
             [
@@ -46,7 +51,7 @@ class CollectionTest extends TestCase
     public function testExecuteFieldMapping()
     {
         $transformer = new Collection(new ArrayUserTransformer('data', ['field' => false]));
-        $result = $transformer->execute(['data' => $this->users], true);
+        $result = $transformer->execute(['data' => $this->users]);
 
         $this->assertEquals($result, [
             [
@@ -61,7 +66,7 @@ class CollectionTest extends TestCase
 
 
         $transformer = new Collection(new ArrayUserTransformer('data'));
-        $result = $transformer->execute(['data' => $this->users], true);
+        $result = $transformer->execute(['data' => $this->users]);
 
         $this->assertEquals($result, [
             'data' => [
@@ -78,7 +83,7 @@ class CollectionTest extends TestCase
 
 
         $transformer = new Collection(new ArrayUserTransformer('data', ['field' => 'my-field']));
-        $result = $transformer->execute(['data' => $this->users], true);
+        $result = $transformer->execute(['data' => $this->users]);
 
         $this->assertEquals($result, [
             'my-field' => [

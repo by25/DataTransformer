@@ -57,7 +57,7 @@ class TransformerTest extends TestCase
     public function testOnceExecute()
     {
         $transformer = new ArrayUserTransformer();
-        $result = $transformer->execute($this->user, true);
+        $result = $transformer->execute($this->user);
 
         $this->assertEquals($result, [
             'name' => 'Tester',
@@ -68,7 +68,7 @@ class TransformerTest extends TestCase
         $transformer = new ArrayUserTransformer('data');
         $result = $transformer->execute([
             'data' => $this->user
-        ], false);
+        ]);
 
         $this->assertEquals($result, [
             'data' => [
@@ -81,7 +81,7 @@ class TransformerTest extends TestCase
         $transformer = new ArrayUserTransformer('data', ['field' => false]);
         $result = $transformer->execute([
             'data' => $this->user
-        ], false);
+        ]);
 
         $this->assertEquals($result, [
             'name' => 'Tester',
@@ -97,7 +97,7 @@ class TransformerTest extends TestCase
         $this->expectException(UndefinedItemPropertyException::class);
 
         $transformer = new ObjectMethodsUserTransformer('test', ['required' => true]);
-        $transformer->execute($this->user, false);
+        $transformer->execute($this->user);
     }
 
 

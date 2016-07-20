@@ -47,7 +47,10 @@ class Collection extends AbstractTransformer
 
         $data = [];
         foreach ($resource as $item) {
-            $data[] = $this->transformer->map($item);
+            $transformedData = $this->transformer->map($item);
+            if ($transformedData) {
+                $data[] = $transformedData;
+            }
         }
 
         return $data;
