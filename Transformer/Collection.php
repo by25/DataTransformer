@@ -96,7 +96,7 @@ class Collection extends AbstractTransformer
     {
         $rawData = $this->fetchDataProperty($resource, $this);
 
-        if (!$rawData) {
+        if ($rawData === null || !is_array($rawData)) {
             return null;
         }
 
@@ -106,8 +106,12 @@ class Collection extends AbstractTransformer
 
             foreach ($rawData as $key => $item) {
                 $childData = $childTransformers->execute($item);
-                if ($childData) {
-                    $result[$key] += $childData;
+                if (is_array($childData)) {
+                    if (array_key_exists($key, $result)) {
+                        $result[$key] += $childData;
+                    } else {
+                        $result[$key] = $childData;
+                    }
                 }
             }
 
