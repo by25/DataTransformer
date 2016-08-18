@@ -16,14 +16,14 @@ interface TransformerInterface
     public function getProperty();
 
     /**
-     * Карта трансформации значения
+     * Трансформировать занчение
      *
      * @param mixed $resource
      * @return array
      *
      * @throws \InvalidArgumentException
      */
-    public function map($resource);
+    public function transform($resource);
 
     /**
      * Добавить трансформер
@@ -46,7 +46,7 @@ interface TransformerInterface
      *
      * @return array
      */
-    public function getOptions();
+    public function getMappingOptions();
 
     /**
      * Вложенные трансформеры

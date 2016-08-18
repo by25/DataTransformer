@@ -10,7 +10,7 @@ use Itmedia\DataTransformer\Transformer\Transformer;
 
 class ArrayUserTransformer extends Transformer
 {
-    public function map($resource)
+    public function transform($resource)
     {
         if (array_key_exists('ignore_me', $resource)) {
             return null;

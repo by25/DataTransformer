@@ -7,6 +7,7 @@ namespace Itmedia\DataTransformer\Tests\Transformer;
 
 
 use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
+use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayGroupTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ObjectMethodsUserTransformer;
 use Itmedia\DataTransformer\Transformer\Collection;
@@ -21,15 +22,13 @@ class TransformerTest extends TestCase
         'property' => 1
     ];
 
-  
-
 
     public function testArrayTransform()
     {
         $transformer = new ArrayUserTransformer();
-        $result = $transformer->map($this->user);
+        $result = $transformer->transform($this->user);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             'name' => 'Tester',
             'email' => 'email@email.com'
         ]);
@@ -38,7 +37,7 @@ class TransformerTest extends TestCase
 
     public function testObjectTransform()
     {
-        $user = $this->getMockBuilder(\StdClass::class)
+        $user = $this->getMockBuilder('\StdClass')
             ->setMethods(['getName', 'getEmail'])
             ->getMock();
         $user->method('getName')->willReturn('Tester');
@@ -46,11 +45,58 @@ class TransformerTest extends TestCase
 
         $transformer = new ObjectMethodsUserTransformer();
 
-        $result = $transformer->map($user);
-        $this->assertEquals($result, [
+        $result = $transformer->transform($user);
+        self::assertEquals($result, [
             'name' => 'Tester',
             'email' => 'email@email.com'
         ]);
+    }
+
+
+    public function testTransformOptions()
+    {
+        $resource = [
+            'group_id' => 1,
+            'group_name' => 'Group name'
+        ];
+
+        $transformer = new ArrayGroupTransformer(null, [], [
+            'show_hi' => true
+        ]);
+        $result = $transformer->transform($resource);
+        self::assertEquals($result, [
+            'id' => 1,
+            'name' => 'Group name',
+            'hi' => 'value'
+        ]);
+
+
+        $transformer = new ArrayGroupTransformer(null, [], [
+            'show_hi' => true,
+            'hi' => 'new value'
+        ]);
+        $result = $transformer->transform($resource);
+        self::assertEquals($result, [
+            'id' => 1,
+            'name' => 'Group name',
+            'hi' => 'new value'
+        ]);
+    }
+
+
+    public function testTransformOptionsException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $resource = [
+            'group_id' => 1,
+            'group_name' => 'Group name'
+        ];
+
+        $transformer = new ArrayGroupTransformer(null, [], [
+            'invalid_option' => true
+        ]);
+        $transformer->transform($resource);
     }
 
 
@@ -59,7 +105,7 @@ class TransformerTest extends TestCase
         $transformer = new ArrayUserTransformer();
         $result = $transformer->execute($this->user);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             'name' => 'Tester',
             'email' => 'email@email.com'
         ]);
@@ -70,7 +116,7 @@ class TransformerTest extends TestCase
             'data' => $this->user
         ]);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             'data' => [
                 'name' => 'Tester',
                 'email' => 'email@email.com'
@@ -83,14 +129,13 @@ class TransformerTest extends TestCase
             'data' => $this->user
         ]);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             'name' => 'Tester',
             'email' => 'email@email.com'
 
         ]);
 
     }
-
 
     public function testExceptions()
     {

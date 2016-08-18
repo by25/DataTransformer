@@ -110,7 +110,7 @@ $result = $transformProvider->transformItem($resource, $transformer);
 ```
 $transformer = new UserTransformer();
 $transformer->add(new UserTransformer()); // Обработка одного элемента
-$transformer->addCollection(new GroupTransformer($property, $options)); // Обработка коллекции элементов
+$transformer->addCollection(new GroupTransformer($property, $mapping, $options)); // Обработка коллекции элементов
 ```
 
 Где:

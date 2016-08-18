@@ -16,10 +16,17 @@ abstract class Transformer extends AbstractTransformer
     /**
      * @var array
      */
-    private $options = [
+    private $mappingOptions = [
         'field' => null,
         'required' => false
     ];
+
+
+    /**
+     * Опции трансофрмации
+     * @var array
+     */
+    private $transformOptions = [];
 
 
     /**
@@ -31,9 +38,9 @@ abstract class Transformer extends AbstractTransformer
     /**
      * Transformer constructor.
      * @param null|string $property Свойство, по которому будет происходить выборка значения для последующей трансформации
-     * @param array $options Опции $key=>$value.
+     * @param array $mapping Конфигурация маппинга $key=>$value.
      *
-     * Доступные опции:
+     * Доступные ключи конфигурации:
      *  - `field`  Название ключа массива, на который будет присвоен результат трансформации:
      *      - string - Название ключа
      *      - null - Автоматически вычислить. Если коллекция, то значение $property иначе объединиться с корневым масивом
@@ -41,20 +48,39 @@ abstract class Transformer extends AbstractTransformer
      *
      *  - `required` - Проверка наличия $property (выкидывается исключение)
      *
+     * @param array $option Настройки трансофрмации объекта, описываются в Transformer::getDefaultOptions()
+     *
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($property = null, array $options = [])
+    public function __construct($property = null, array $mapping = [], array $option = [])
     {
         $this->property = $property;
 
-        foreach ($options as $key => $value) {
-            if (array_key_exists($key, $this->options)) {
-                $this->options[$key] = $value;
-            } else {
+        // Mapping configuration
+
+        foreach ($mapping as $key => $value) {
+            if (!array_key_exists($key, $this->mappingOptions)) {
                 throw new \InvalidArgumentException(sprintf('Undefined option "%s"', $key));
             }
+
+            $this->mappingOptions[$key] = $value;
         }
+
+        // Transform Options
+
+        $this->transformOptions = $this->defaultOptions();
+        $keysOptions = array_keys($this->transformOptions);
+
+        foreach ($option as $key => $value) {
+            if (!in_array($key, $keysOptions, true)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Unknown options "%s". Define option in method Transformer::getDefaultOptions', $key)
+                );
+            }
+            $this->transformOptions[$key] = $value;
+        }
+
     }
 
     /**
@@ -87,9 +113,9 @@ abstract class Transformer extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
-    public function getOptions()
+    public function getMappingOptions()
     {
-        return $this->options;
+        return $this->mappingOptions;
     }
 
 
@@ -113,7 +139,7 @@ abstract class Transformer extends AbstractTransformer
             return null;
         }
 
-        $result = $this->map($rawData);
+        $result = $this->transform($rawData);
 
         foreach ($this->transformers as $childTransformers) {
             $childData = $childTransformers->execute($rawData);
@@ -123,6 +149,35 @@ abstract class Transformer extends AbstractTransformer
         }
 
         return $this->returnMappedData($result);
+    }
+
+
+    /**
+     * Опции по умолчанию (key => value)
+     *
+     * @return array
+     */
+    protected function defaultOptions()
+    {
+        return [];
+    }
+
+
+    /**
+     * Получить опцию трансофрмации
+     *
+     * @param $key
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    protected function getOption($key)
+    {
+        if (!array_key_exists($key, $this->transformOptions)) {
+            throw new \InvalidArgumentException(
+                sprintf('Undefined option "%s"', $key)
+            );
+        }
+        return $this->transformOptions[$key];
     }
 
 

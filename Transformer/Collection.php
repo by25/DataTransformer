@@ -39,7 +39,7 @@ class Collection extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
-    public function map($resource)
+    public function transform($resource)
     {
         if (!is_array($resource)) {
             throw new \InvalidArgumentException('Resource must be array');
@@ -47,7 +47,7 @@ class Collection extends AbstractTransformer
 
         $data = [];
         foreach ($resource as $item) {
-            $transformedData = $this->transformer->map($item);
+            $transformedData = $this->transformer->transform($item);
             if ($transformedData) {
                 $data[] = $transformedData;
             }
@@ -75,9 +75,9 @@ class Collection extends AbstractTransformer
     /**
      * {@inheritdoc}
      */
-    public function getOptions()
+    public function getMappingOptions()
     {
-        return $this->transformer->getOptions();
+        return $this->transformer->getMappingOptions();
     }
 
     /**
@@ -100,7 +100,7 @@ class Collection extends AbstractTransformer
             return null;
         }
 
-        $result = $this->map($rawData);
+        $result = $this->transform($rawData);
 
         foreach ($this->getTransformers() as $childTransformers) {
 

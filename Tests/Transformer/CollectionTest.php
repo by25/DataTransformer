@@ -35,7 +35,7 @@ class CollectionTest extends TestCase
         $transformer = new Collection(new ArrayUserTransformer());
         $result = $transformer->execute($this->users);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             [
                 'name' => 'Tester',
                 'email' => 'tester1@email.com'
@@ -53,7 +53,7 @@ class CollectionTest extends TestCase
         $transformer = new Collection(new ArrayUserTransformer('data', ['field' => false]));
         $result = $transformer->execute(['data' => $this->users]);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             [
                 'name' => 'Tester',
                 'email' => 'tester1@email.com'
@@ -68,7 +68,7 @@ class CollectionTest extends TestCase
         $transformer = new Collection(new ArrayUserTransformer('data'));
         $result = $transformer->execute(['data' => $this->users]);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             'data' => [
                 [
                     'name' => 'Tester',
@@ -85,7 +85,7 @@ class CollectionTest extends TestCase
         $transformer = new Collection(new ArrayUserTransformer('data', ['field' => 'my-field']));
         $result = $transformer->execute(['data' => $this->users]);
 
-        $this->assertEquals($result, [
+        self::assertEquals($result, [
             'my-field' => [
                 [
                     'name' => 'Tester',

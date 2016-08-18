@@ -17,7 +17,7 @@ abstract class AbstractTransformer implements TransformerInterface
      */
     protected function returnMappedData($data)
     {
-        $key = $this->getOptions()['field'];
+        $key = $this->getMappingOptions()['field'];
 
         if ($key === null) {
             $key = $this->getProperty();
@@ -54,7 +54,7 @@ abstract class AbstractTransformer implements TransformerInterface
             return $resource->{$transformer->getProperty()}();
         }
 
-        if ($transformer->getOptions()['required']) {
+        if ($transformer->getMappingOptions()['required']) {
             throw new UndefinedItemPropertyException(sprintf(
                 'Undefined property "%s"', $transformer->getProperty()
             ));
