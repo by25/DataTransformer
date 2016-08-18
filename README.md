@@ -118,10 +118,9 @@ $transformer->addCollection(new GroupTransformer($property, $mapping, $options))
  - `$property` - Свойство, по которому будет происходить выборка значения для последующей трансформации. Может быть
  как ключем массива, так и названием метода объекта (default: null)
 
- - `$options` - Опции трансформера.
-
-
-Доступные опции трансформера:
+ - `$mapping` - Опции маппинга (склеивания в выходной массив).
+ 
+Доступные опции маппинга:
 
 - `field`  Название ключа массива, на который будет присвоен результат трансформации (default: null):
     - string - название ключа;
@@ -129,6 +128,11 @@ $transformer->addCollection(new GroupTransformer($property, $mapping, $options))
     - false  - объединение с корневым масивом.
 
 - `required` - Проверить существования данных по $property (выкидывается исключение) (default: false).
+
+
+ - `$options` - Опции трансформации. Может использоваться для управления преобразования данных, например для скрытия 
+ каких-либо полей. Описываются доступные опции трансформации в Transformer::defaultOptions(). 
+ Пример - `Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayGroupTransformer`
 
 
 
