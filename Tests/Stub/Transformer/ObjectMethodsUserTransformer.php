@@ -5,7 +5,6 @@
 
 namespace Itmedia\DataTransformer\Tests\Stub\Transformer;
 
-
 use Itmedia\DataTransformer\Transformer\Transformer;
 
 class ObjectMethodsUserTransformer extends Transformer
@@ -17,6 +16,4 @@ class ObjectMethodsUserTransformer extends Transformer
             'name' => $resource->getName(),
         ];
     }
-
-
 }

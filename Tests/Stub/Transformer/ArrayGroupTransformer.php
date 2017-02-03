@@ -5,7 +5,6 @@
 
 namespace Itmedia\DataTransformer\Tests\Stub\Transformer;
 
-
 use Itmedia\DataTransformer\Transformer\Transformer;
 
 class ArrayGroupTransformer extends Transformer
@@ -32,6 +31,4 @@ class ArrayGroupTransformer extends Transformer
             'hi' => 'value'
         ];
     }
-
-
 }

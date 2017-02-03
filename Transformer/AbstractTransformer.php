@@ -5,7 +5,6 @@
 
 namespace Itmedia\DataTransformer\Transformer;
 
-
 use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
 
 abstract class AbstractTransformer implements TransformerInterface
@@ -62,5 +61,4 @@ abstract class AbstractTransformer implements TransformerInterface
             return null;
         }
     }
-
 }

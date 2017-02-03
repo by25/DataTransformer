@@ -6,9 +6,6 @@
 namespace Itmedia\DataTransformer\Transformer;
 
 
-use Itmedia\DataTransformer\DataExtractor;
-use Itmedia\DataTransformer\Exception\ExpectedCollectionException;
-
 class Collection extends AbstractTransformer
 {
 
@@ -103,18 +100,14 @@ class Collection extends AbstractTransformer
         $result = $this->transform($rawData);
 
         foreach ($this->getTransformers() as $childTransformers) {
-
             foreach ($rawData as $key => $item) {
                 $childData = $childTransformers->execute($item);
                 if (is_array($childData) && array_key_exists($key, $result)) {
                     $result[$key] += $childData;
                 }
             }
-
         }
 
         return $this->returnMappedData($result);
     }
-
-
 }

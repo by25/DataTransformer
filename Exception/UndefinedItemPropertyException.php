@@ -5,8 +5,6 @@
 
 namespace Itmedia\DataTransformer\Exception;
 
-
 class UndefinedItemPropertyException extends \InvalidArgumentException
 {
-
 }

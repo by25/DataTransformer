@@ -5,7 +5,6 @@
 
 namespace Itmedia\DataTransformer\Tests\Provider;
 
-
 use Itmedia\DataTransformer\Provider\TransformProvider;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayGroupTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
@@ -15,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class TransformProviderTest extends TestCase
 {
-
     public function testTransform()
     {
         $user = $this->getMockBuilder(\StdClass::class)
@@ -247,6 +245,4 @@ class TransformProviderTest extends TestCase
             ],
         ]);
     }
-
-
 }

@@ -5,7 +5,6 @@
 
 namespace Itmedia\DataTransformer\Tests\Stub\Transformer;
 
-
 use Itmedia\DataTransformer\Transformer\Transformer;
 
 class ArrayUserTransformer extends Transformer
@@ -21,5 +20,4 @@ class ArrayUserTransformer extends Transformer
             'email' => $resource['user_email']
         ];
     }
-
 }

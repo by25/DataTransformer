@@ -5,14 +5,12 @@
 
 namespace Itmedia\DataTransformer\Tests\Transformer;
 
-
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
 use Itmedia\DataTransformer\Transformer\Collection;
 use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
 {
-
     private $users = [
         [
             'user_name' => 'Tester',
@@ -45,7 +43,6 @@ class CollectionTest extends TestCase
                 'email' => 'tester2@email.com'
             ]
         ]);
-
     }
 
     public function testExecuteFieldMapping()
@@ -97,7 +94,5 @@ class CollectionTest extends TestCase
                 ]
             ]
         ]);
-
     }
-
 }

@@ -8,7 +8,6 @@ namespace Itmedia\DataTransformer\Provider;
 use Itmedia\DataTransformer\Transformer\Collection;
 use Itmedia\DataTransformer\Transformer\TransformerInterface;
 
-
 class TransformProvider implements TransformProviderInterface
 {
     private $options = [
@@ -57,5 +56,4 @@ class TransformProvider implements TransformProviderInterface
     {
         return $this->transformItem($resource, new Collection($transformer));
     }
-
 }

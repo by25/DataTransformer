@@ -62,6 +62,4 @@ interface TransformerInterface
      * @throws \InvalidArgumentException
      */
     public function execute($resource);
-
-
 }

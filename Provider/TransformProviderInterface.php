@@ -5,7 +5,6 @@
 
 namespace Itmedia\DataTransformer\Provider;
 
-
 use Itmedia\DataTransformer\Transformer\TransformerInterface;
 
 interface TransformProviderInterface

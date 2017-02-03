@@ -80,7 +80,6 @@ abstract class Transformer extends AbstractTransformer
             }
             $this->transformOptions[$key] = $value;
         }
-
     }
 
     /**
@@ -179,6 +178,4 @@ abstract class Transformer extends AbstractTransformer
         }
         return $this->transformOptions[$key];
     }
-
-
 }

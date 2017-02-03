@@ -5,7 +5,6 @@
 
 namespace Itmedia\DataTransformer\Tests\Transformer;
 
-
 use Itmedia\DataTransformer\Exception\UndefinedItemPropertyException;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayGroupTransformer;
 use Itmedia\DataTransformer\Tests\Stub\Transformer\ArrayUserTransformer;
@@ -15,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class TransformerTest extends TestCase
 {
-
     private $user = [
         'user_name' => 'Tester',
         'user_email' => 'email@email.com',
@@ -134,7 +132,6 @@ class TransformerTest extends TestCase
             'email' => 'email@email.com'
 
         ]);
-
     }
 
     public function testExceptions()
@@ -144,6 +141,4 @@ class TransformerTest extends TestCase
         $transformer = new ObjectMethodsUserTransformer('test', ['required' => true]);
         $transformer->execute($this->user);
     }
-
-
 }
